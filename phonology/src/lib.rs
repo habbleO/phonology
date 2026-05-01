@@ -1,5 +1,9 @@
 use std::vec::Vec;
 
+
+#[cfg(test)]
+mod tests;
+
 #[allow(unused)]
 pub struct Segment {
     name: String,
@@ -8,8 +12,12 @@ pub struct Segment {
 
 #[allow(unused)]
 impl Segment {
-    fn new<T: Into<String>>(name: T, features: Vec<Feature>) -> Self {
+    pub const fn new<T: Into<String>>(name: T, features: Vec<Feature>) -> Self {
         return Self{name: name.into(), features}
+    }
+
+    pub const fn get_name(&self) -> &str {
+        return &self.name;
     }
 }
 
@@ -21,28 +29,7 @@ pub struct Feature {
 
 #[allow(unused)]
 impl Feature {
-    fn new<T: Into<String>>(name: T, assignment: Option<bool>) -> Self {
+    pub const fn new<T: Into<String>>(name: T, assignment: Option<bool>) -> Self {
         return Self {name: name.into(), assignment}
-    }
-}
-
-#[allow(unused)]
-fn setup() -> Segment {
-    let bilabial = Feature::new("bilabial", Some(true));
-    let voiceless = Feature::new("voice", Some(false));
-    let stop = Feature::new("delayed release", Some(false));
-    let f_vec = vec![bilabial, voiceless, stop];
-    let p = Segment::new("p", f_vec);
-    return p;
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn basic_test() {
-        let p = setup();
-        assert!(p.name == String::from("p"));
     }
 }
