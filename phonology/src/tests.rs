@@ -1,4 +1,6 @@
 use super::*;
+use crate::feature::Feature;
+use crate::segment::Segment;
 
 fn setup() -> Segment {
     let bilabial = Feature::new("bilabial", Some(true));
