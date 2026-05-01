@@ -1,13 +1,11 @@
-use super::*;
 use crate::feature::Feature;
 use crate::segment::Segment;
 use crate::word::Word;
 
+use crate::const_features::*;
+
 fn setup() -> Segment {
-    let bilabial = Feature::new("bilabial", Some(true));
-    let voiceless = Feature::new("voice", Some(false));
-    let stop = Feature::new("delayed release", Some(false));
-    let f_vec = vec![bilabial, voiceless, stop];
+    let f_vec = vec![bilabial(), min_voice(), min_delayed_release()];
     let p = Segment::new("p", f_vec);
     return p;
 }
@@ -22,24 +20,21 @@ fn get_segment_name() {
 #[test]
 fn get_segment_features() {
     let p = setup();
-    let bilabial = Feature::new("bilabial", Some(true));
-    let voiceless = Feature::new("voice", Some(false));
-    let stop = Feature::new("delayed release", Some(false));
 
-    assert!(p.get_features().contains(&bilabial));
-    assert!(p.get_features().contains(&voiceless));
-    assert!(p.get_features().contains(&stop));
+    assert!(p.get_features().contains(&bilabial()));
+    assert!(p.get_features().contains(&min_voice()));
+    assert!(p.get_features().contains(&min_delayed_release()));
 }
 
 #[test]
 fn get_feature_name() {
-    let voiceless = Feature::new("voice", Some(false));
+    let voiceless = min_voice();
     assert!(voiceless.get_name() == "voice");
 }
 
 #[test]
 fn get_feature_assignment() {
-    let voiceless = Feature::new("voice", Some(false));
+    let voiceless = min_voice();
     assert!(voiceless.get_assignment() == &Some(false));   
 }
 
@@ -51,16 +46,12 @@ fn get_zero_assignment() {
 
 #[test]
 fn get_word_surface_form() {
-    let bilabial = Feature::new("bilabial", Some(true));
-    let voiceless = Feature::new("voice", Some(false));
-    let stop = Feature::new("delayed release", Some(false));
-    let syllabic = Feature::new("syllabic", Some(true));
 
-    let p_vec = vec![bilabial, voiceless, stop];
+    let p_vec = vec![bilabial(), min_voice(), min_delayed_release()];
     let p = Segment::new("p", p_vec);
     let p_2 = p.clone();
 
-    let o_vec = vec![syllabic];
+    let o_vec = vec![syllabic()];
     let o = Segment::new("o", o_vec);
 
     let pop_ur = vec![p, o, p_2];
