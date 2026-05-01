@@ -5,6 +5,7 @@ use std::vec::Vec;
 mod tests;
 
 #[allow(unused)]
+#[derive(PartialEq)]
 pub struct Segment {
     name: String,
     features: Vec<Feature>
@@ -26,6 +27,7 @@ impl Segment {
 }
 
 #[allow(unused)]
+#[derive(PartialEq)]
 pub struct Feature {
     name: String,
     assignment: Option<bool>
