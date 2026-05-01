@@ -2,7 +2,7 @@ use std::vec::Vec;
 use super::*;
 
 #[allow(unused)]
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 pub struct Segment {
     name: String,
     features: Vec<feature::Feature>

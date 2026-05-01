@@ -1,7 +1,5 @@
-use super::*;
-
 #[allow(unused)]
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 pub struct Feature {
     name: String,
     assignment: Option<bool>
