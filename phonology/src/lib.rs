@@ -12,12 +12,16 @@ pub struct Segment {
 
 #[allow(unused)]
 impl Segment {
-    pub const fn new<T: Into<String>>(name: T, features: Vec<Feature>) -> Self {
+    pub fn new<T: Into<String>>(name: T, features: Vec<Feature>) -> Self {
         return Self{name: name.into(), features}
     }
 
-    pub const fn get_name(&self) -> &str {
+    pub fn get_name(&self) -> &str {
         return &self.name;
+    }
+
+    pub fn get_features(&self) -> &Vec<Feature> {
+        return &self.features;
     }
 }
 
@@ -29,7 +33,15 @@ pub struct Feature {
 
 #[allow(unused)]
 impl Feature {
-    pub const fn new<T: Into<String>>(name: T, assignment: Option<bool>) -> Self {
+    pub fn new<T: Into<String>>(name: T, assignment: Option<bool>) -> Self {
         return Self {name: name.into(), assignment}
+    }
+
+    pub fn get_name(&self) -> &str {
+        return &self.name;
+    }
+
+    pub fn get_assignment(&self) -> &Option<bool> {
+        return &self.assignment;
     }
 }

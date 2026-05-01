@@ -1,6 +1,5 @@
 use super::*;
 
-#[test]
 fn setup() -> Segment {
     let bilabial = Feature::new("bilabial", Some(true));
     let voiceless = Feature::new("voice", Some(false));
