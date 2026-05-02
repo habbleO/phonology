@@ -34,16 +34,16 @@ impl Word {
         let mut result: Vec<Segment> = Vec::new();
 
         for item in vector{
-            match Feature::to_feature_matrix(item) {
-                Some(matrix) => {
-                    let segment = Segment::new(item, matrix);
-                    result.push(segment);
-                },
-                None => {
-                    let err_msg = format!("Could not parse {} as a feature matrix.", item);
+
+            let f_matrix = Feature::to_feature_matrix(item);
+
+            if f_matrix.iter().all(|x| *x.get_assignment() == None) {
+                let err_msg = format!("Could not parse {} as a feature matrix.", item);
                     return Err(err_msg);
-                }
-            };
+            }
+
+            let segment = Segment::new(item, f_matrix);
+            result.push(segment);
         }
         let new_word = Word::new(result);
         return Ok(new_word);

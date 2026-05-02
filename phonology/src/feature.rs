@@ -95,37 +95,32 @@ impl Feature {
         return all_defaults;
     }
 
-    pub fn to_feature_matrix(symbol: &str) -> Option<Vec<Feature>>{
-        /// If symbol can be parsed as a feature matrix, returns Some(feature_matrix). If a symbol has no associated features, returns None.
+    pub fn to_feature_matrix(symbol: &str) -> Vec<Feature>{
+        /// TODO: Add Doc Comment.
 
         let all_defaults = Feature::get_default_features();
 
         let mut result: Vec<Feature> = Vec::new();
+        let mut feat_assignment: Option<bool>;
 
         for feat in all_defaults {
+
             if feat.get_plus().contains(&symbol) {
-                let feat_name = feat.get_name();
-                let feat_assignment = Some(true);
-                let new_feature = Feature::new(feat_name, feat_assignment);
-                result.push(new_feature);
+                feat_assignment = Some(true);
             } else if feat.get_minus().contains(&symbol) {
-                let feat_name = feat.get_name();
-                let feat_assignment = Some(false);
-                let new_feature = Feature::new(feat_name, feat_assignment);
-                result.push(new_feature);
+                feat_assignment = Some(false);
             } else {
-                let feat_name = feat.get_name();
-                let feat_assignment = None;
-                let new_feature = Feature::new(feat_name, feat_assignment);
-                result.push(new_feature);
+                feat_assignment = None;
             }
+
+            
+            let feat_name = feat.get_name();
+            
+            let new_feature = Feature::new(feat_name, feat_assignment);
+            result.push(new_feature);
         }
 
-        if result.len() == 0 {
-            return None
-        } else {
-            return Some(result)
-        }
+        return result;
     }
     
 

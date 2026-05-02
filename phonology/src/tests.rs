@@ -59,8 +59,8 @@ fn get_zero_assignment() {
 #[test]
 fn get_word_surface_form() {
     // Tests Word::get_surface_form().
-    let p = Segment::new("p", Feature::to_feature_matrix("p").unwrap());
-    let o = Segment::new("o", Feature::to_feature_matrix("o").unwrap());
+    let p = Segment::new("p", Feature::to_feature_matrix("p"));
+    let o = Segment::new("o", Feature::to_feature_matrix("o"));
 
     let pop_ur = vec![p.clone(), o, p.clone()];
     let pop = Word::new(pop_ur);
@@ -74,7 +74,7 @@ fn get_word_surface_form() {
 fn symbol_parsing() {
     // Tests Feature::to_feature_matrix().
     // Tests parsing a single character as a feature matrix.
-    let p = Feature::to_feature_matrix("p").expect("This symbol isn't int the parse_hash.");
+    let p = Feature::to_feature_matrix("p");
 
     let labial = Feature::new("labial", Some(true));
     assert!(p.contains(&labial));
