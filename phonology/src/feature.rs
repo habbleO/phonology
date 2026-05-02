@@ -95,7 +95,7 @@ impl Feature {
         return all_defaults;
     }
 
-    pub fn to_feature_matrix(symbol: &str) -> Vec<Feature>{
+    pub fn to_feature_matrix(symbol: &str) -> Result<Vec<Feature>, String>{
         /// TODO: Add Doc Comment.
 
         let all_defaults = Feature::get_default_features();
@@ -120,7 +120,12 @@ impl Feature {
             result.push(new_feature);
         }
 
-        return result;
+        if result.iter().all(|x| *x.get_assignment() == None) {
+            let err_msg = format!("Could not parse {} as a feature matrix.", symbol);
+            return Err(err_msg);
+        }
+
+        return Ok(result);
     }
     
 

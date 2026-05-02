@@ -35,12 +35,7 @@ impl Word {
 
         for item in vector{
 
-            let f_matrix = Feature::to_feature_matrix(item);
-
-            if f_matrix.iter().all(|x| *x.get_assignment() == None) {
-                let err_msg = format!("Could not parse {} as a feature matrix.", item);
-                    return Err(err_msg);
-            }
+            let f_matrix = Feature::to_feature_matrix(item)?;
 
             let segment = Segment::new(item, f_matrix);
             result.push(segment);
