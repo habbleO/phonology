@@ -29,11 +29,11 @@ impl Feature {
         return &self.assignment;
     }
 
-    pub fn get_parse_hash() -> HashMap<String, Vec<Feature>> {
+    pub fn get_parse_hash() -> HashMap<&'static str, Vec<Feature>> {
         /// The phonology crate supports parsing IPA characters as Feature matrices. This is done using a HashMap containing all character-feature correspondences. get_parse_hash() returns that HashMap.
-        let parse_hash: HashMap<String, Vec<Feature>> = HashMap::from([
-            ("p".to_string(), vec![Feature::BILABIAL(), Feature::MIN_VOICE(), Feature::MIN_DELAYED_RELEASE()]),
-            ("o".to_string(), vec![Feature::SYLLABIC()])
+        let parse_hash: HashMap<&'static str, Vec<Feature>> = HashMap::from([
+            ("p", vec![Feature::BILABIAL(), Feature::MIN_VOICE(), Feature::MIN_DELAYED_RELEASE()]),
+            ("o", vec![Feature::SYLLABIC()])
         ]);
 
         return parse_hash;
