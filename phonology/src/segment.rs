@@ -1,5 +1,4 @@
 use std::vec::Vec;
-use super::*;
 use crate::feature::Feature;
 
 #[allow(unused)]
@@ -29,7 +28,10 @@ impl Segment {
         return &self.features;
     }
 
-    /*pub fn from_symbol(&self) -> Result<Self, String> {
-        let features = Feature::to_feature_matrix()?
-    }*/
+    pub fn from_symbol(symbol: &str) -> Result<Self, String> {
+        let features = Feature::to_feature_matrix(symbol)?;
+
+        let new_segment = Segment::new(symbol, features);
+        return Ok(new_segment);
+    }
 }
