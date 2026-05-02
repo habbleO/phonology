@@ -1,5 +1,6 @@
 use crate::feature::Feature;
 
+#[allow(unused, non_snake_case)]
 impl Feature {
     pub fn BILABIAL() -> Feature {
         return Feature::new("bilabial", Some(true));
