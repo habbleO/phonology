@@ -16,6 +16,7 @@ fn setup() -> Segment {
 
 #[test]
 fn get_segment_name() {
+    // Tests Segment::get_name();
     let p = setup();
     let p_name = p.get_name();
     assert!(p_name == "p");
@@ -23,6 +24,7 @@ fn get_segment_name() {
 
 #[test]
 fn get_segment_features() {
+    // Tests Segment.get_features().
     let p = setup();
 
     assert!(p.get_features().contains(&Feature::BILABIAL()));
@@ -32,25 +34,31 @@ fn get_segment_features() {
 
 #[test]
 fn get_feature_name() {
+    // Tests Feature::get_name().
     let voiceless = Feature::MIN_VOICE();
     assert!(voiceless.get_name() == "voice");
 }
 
 #[test]
 fn get_feature_assignment() {
+    // Tests Feature::get_assignment() when assignment is not 0.
+    let syllabic = Feature::SYLLABIC();
+    assert_eq!(syllabic.get_assignment(), &Some(true));
+
     let voiceless = Feature::MIN_VOICE();
     assert!(voiceless.get_assignment() == &Some(false));   
 }
 
 #[test]
 fn get_zero_assignment() {
+    // Tests Feature::get_assignment when assignment is 0.
     let zero_voice = Feature::new("voice", None);
     assert!(zero_voice.get_assignment() == &None);
 }
 
 #[test]
 fn get_word_surface_form() {
-
+    // Tests Word::get_surface_form().
     let p = Segment::new("p", Feature::to_feature_matrix("p").unwrap());
     let o = Segment::new("o", Feature::to_feature_matrix("o").unwrap());
 
@@ -64,6 +72,8 @@ fn get_word_surface_form() {
 
 #[test]
 fn symbol_parsing() {
+    // Tests Feature::to_feature_matrix().
+    // Tests parsing a single character as a feature matrix.
     let p = Feature::to_feature_matrix("p").expect("This symbol isn't int the parse_hash.");
 
     assert!(p.contains(&Feature::BILABIAL()));
@@ -77,6 +87,8 @@ fn symbol_parsing() {
 
 #[test]
 fn word_parsing() {
+    // Tests Word::from_vec().
+    // Tests parsing a vector of IPA characters as a Word.
     let word_vec = vec!["p", "o", "p"];
     let word_struct = Word::from_vec(word_vec);
     let word_sr = word_struct.unwrap().get_surface_form();

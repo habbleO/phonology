@@ -4,16 +4,20 @@ use std::vec::Vec;
 
 #[allow(unused)]
 pub struct Word {
+    /// Struct that represents a word, with an underlying form. The underlying form is a sequence of segments.
     underlying_form: Vec<Segment>
 }
 
 #[allow(unused)]
 impl Word {
     pub fn new(underlying_form: Vec<Segment>) -> Self {
+        /// Returns a new underlying form given a vector of segments.
         return Self{underlying_form};
     }
 
     pub fn get_surface_form(&self) -> String {
+        /// Returns the surface form of the word.
+        /// Because phonological rules are currently not implemented, this is just a sequence of each segment's name.
         let mut result = String::new();
 
         for char in &self.underlying_form {
@@ -25,6 +29,8 @@ impl Word {
     }
 
     pub fn from_vec(vector: Vec<&str>) -> Result<Self, String> {
+        /// Turns a vector of IPA characters into a word. For this to not error, each element in the vector must be parseable as a feature matrix.
+        /// If a character is not parseable, returns an error.
         let mut result: Vec<Segment> = Vec::new();
 
         for item in vector{
