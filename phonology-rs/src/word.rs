@@ -43,4 +43,18 @@ impl Word {
         let new_word = Word::new(result);
         return Ok(new_word);
     }
+
+    pub fn from_str(text: &str) -> Result<Self, String> {
+        // If possible, converts a &str into a word, where each character is parsed as an IPA character. If this fails, returns Err.
+        let mut ipa_vec: Vec<String> = Vec::new();
+
+        for symbol in text.chars() {
+            let new_symbol = symbol.clone().to_string();
+            ipa_vec.push(new_symbol);
+        }
+
+        let ipa_vec = ipa_vec.iter().map(|x| x.as_str()).collect();
+
+        return Word::from_vec(ipa_vec);
+    }
 }

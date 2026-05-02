@@ -32,6 +32,7 @@ fn test_feature_get_zero_assignment() {
 
 #[test]
 fn test_feature_to_feature_matrix() {
+    // Tests Feature::to_feature_matrix().
     let a = Feature::to_feature_matrix("a").unwrap();
     let nonfront = Feature::new("front", Some(false));
     let nonback = Feature::new("back", Some(false));
@@ -46,12 +47,14 @@ fn test_feature_to_feature_matrix() {
 
 #[test]
 fn test_feature_to_feature_matrix_fail() {
+    // Tests a failure state for Feature::to_feature_matrix().
     let failure = Feature::to_feature_matrix("0");
     assert!(failure.is_err());
 }
 
 #[test]
-fn test_segment_get_name() {
+fn test_segment_get_name() {]
+    // Tests Segment::get_name().
     let t = Segment::from_symbol("t").unwrap();
 
     assert_eq!(t.get_name(), "t")
@@ -59,6 +62,7 @@ fn test_segment_get_name() {
 
 #[test]
 fn test_segment_get_features() {
+    // Tests Segment::get_features().
     let a = Segment::from_symbol("a").unwrap();
 
     let nonfront = Feature::new("front", Some(false));
@@ -74,6 +78,7 @@ fn test_segment_get_features() {
 
 #[test]
 fn test_segment_from_symbol() {
+    // Tests Segment::from_symbol().
     let p = Segment::from_symbol("p").unwrap();
     let p_name = p.get_name();
     let p_features = p.get_features();
@@ -88,6 +93,7 @@ fn test_segment_from_symbol() {
 
 #[test]
 fn test_segment_from_symbol_fail() {
+    // Tests a failure state for Segment::from_symbol.
     let failure = Segment::from_symbol("1");
     
     assert!(failure.is_err());
@@ -120,6 +126,23 @@ fn test_word_from_vec() {
 
 #[test]
 fn test_word_from_vec_fail() {
+    // Tests a failure state for Word::from_vec().
     let failure = Word::from_vec(vec!["0", "1", "2"]);
+    assert!(failure.is_err());
+}
+
+#[test]
+fn test_word_from_str() {
+    // Tests Word::from_str().
+    let new_word = Word::from_str("pot").unwrap();
+    let new_word_sr = new_word.get_surface_form();
+
+    assert_eq!(new_word_sr, "pot");
+}
+
+#[test]
+fn test_word_from_str_fail() {
+    Tests a failure state for Word::from_str().
+    let failure = Word::from_str("000");
     assert!(failure.is_err());
 }
