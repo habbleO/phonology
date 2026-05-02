@@ -5,7 +5,10 @@ use crate::word::Word;
 use crate::const_features::*;
 
 fn setup() -> Segment {
-    let f_vec = vec![bilabial(), min_voice(), min_delayed_release()];
+    let f_vec = vec![
+        Feature::BILABIAL(), 
+        Feature::MIN_VOICE(), 
+        Feature::MIN_DELAYED_RELEASE()];
     let p = Segment::new("p", f_vec);
     return p;
 }
@@ -21,20 +24,20 @@ fn get_segment_name() {
 fn get_segment_features() {
     let p = setup();
 
-    assert!(p.get_features().contains(&bilabial()));
-    assert!(p.get_features().contains(&min_voice()));
-    assert!(p.get_features().contains(&min_delayed_release()));
+    assert!(p.get_features().contains(&Feature::BILABIAL()));
+    assert!(p.get_features().contains(&Feature::MIN_VOICE()));
+    assert!(p.get_features().contains(&Feature::MIN_DELAYED_RELEASE()));
 }
 
 #[test]
 fn get_feature_name() {
-    let voiceless = min_voice();
+    let voiceless = Feature::MIN_VOICE();
     assert!(voiceless.get_name() == "voice");
 }
 
 #[test]
 fn get_feature_assignment() {
-    let voiceless = min_voice();
+    let voiceless = Feature::MIN_VOICE();
     assert!(voiceless.get_assignment() == &Some(false));   
 }
 
@@ -47,11 +50,14 @@ fn get_zero_assignment() {
 #[test]
 fn get_word_surface_form() {
 
-    let p_vec = vec![bilabial(), min_voice(), min_delayed_release()];
+    let p_vec = vec![
+        Feature::BILABIAL(), 
+        Feature::MIN_VOICE(), 
+        Feature::MIN_DELAYED_RELEASE()];
     let p = Segment::new("p", p_vec);
     let p_2 = p.clone();
 
-    let o_vec = vec![syllabic()];
+    let o_vec = vec![Feature::SYLLABIC()];
     let o = Segment::new("o", o_vec);
 
     let pop_ur = vec![p, o, p_2];
