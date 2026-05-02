@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use crate::const_features::DefaultFeature;
 
 #[allow(unused)]
 #[derive(PartialEq, Clone)]
@@ -29,21 +30,102 @@ impl Feature {
         return &self.assignment;
     }
 
-    pub fn get_parse_hash() -> HashMap<&'static str, Vec<Feature>> {
-        /// The phonology crate supports parsing IPA characters as Feature matrices. This is done using a HashMap containing all character-feature correspondences. get_parse_hash() returns that HashMap.
-        let parse_hash: HashMap<&'static str, Vec<Feature>> = HashMap::from([
-            ("p", vec![Feature::BILABIAL(), Feature::MIN_VOICE(), Feature::MIN_DELAYED_RELEASE()]),
-            ("o", vec![Feature::SYLLABIC()])
-        ]);
+    pub fn get_default_features() -> Vec<DefaultFeature> {
+        // Currently used symbols and features
+        // p, b, t, d, k, g, a, e, i, o, u
+        // labial, coronal, dorsal, voice, syllabic,
+        // high, low, front, back
 
-        return parse_hash;
+        let labial = DefaultFeature::new(
+            "labial", 
+            vec!["p", "b"], 
+            vec!["t", "d", "k", "g", "a", "e", "i", "o", "u"]);
+        
+        let coronal = DefaultFeature::new(
+            "coronal",
+            vec!["t", "d"],
+            vec!["p", "b", "k", "g", "a", "e", "i", "o", "u"]);
+        
+        let dorsal = DefaultFeature::new(
+            "dorsal",
+            vec!["k", "g", "a", "e", "i", "o", "u"],
+            vec!["p", "b", "t", "d"]);
+
+        let voice = DefaultFeature::new(
+            "voice",
+            vec!["b", "d", "g", "a", "e", "i", "o", "u"], 
+            vec!["p", "t", "k"]);
+
+        let syllabic = DefaultFeature::new(
+            "syllabic",
+            vec!["a", "e", "i", "o", "u"],
+            vec!["p", "b", "t", "d", "k", "g"]);
+
+        let high = DefaultFeature::new(
+            "high",
+            vec!["i", "u", "k", "g"],
+            vec!["a", "e", "o"]
+        );
+
+        let low = DefaultFeature::new(
+            "low",
+            vec!["a"],
+            vec!["i", "e", "u", "o", "k", "g"]
+        );
+
+        let front = DefaultFeature::new(
+            "front",
+            vec!["i", "e"],
+            vec!["a", "u", "o"]
+        );
+
+        let back = DefaultFeature::new(
+            "back",
+            vec!["u", "o"],
+            vec!["a", "i", "e"]
+        );
+
+        let all_defaults = vec![
+            labial, coronal,
+            dorsal, voice,
+            syllabic, high,
+            low, front, back
+        ];
+
+        return all_defaults;
     }
 
     pub fn to_feature_matrix(symbol: &str) -> Option<Vec<Feature>>{
-        /// If symbol can be parsed as a feature matrix using the HashMap in get_parse_hash, return Some(feature_matrix). If it cannot be parsed as a feature matrix, returns None.
-        let parse_hash = Feature::get_parse_hash();
-        return parse_hash.get(symbol).cloned();
+        /// If symbol can be parsed as a feature matrix, returns Some(feature_matrix). If a symbol has no associated features, returns None.
 
+        let all_defaults = Feature::get_default_features();
+
+        let mut result: Vec<Feature> = Vec::new();
+
+        for feat in all_defaults {
+            if feat.get_plus().contains(&symbol) {
+                let feat_name = feat.get_name();
+                let feat_assignment = Some(true);
+                let new_feature = Feature::new(feat_name, feat_assignment);
+                result.push(new_feature);
+            } else if feat.get_minus().contains(&symbol) {
+                let feat_name = feat.get_name();
+                let feat_assignment = Some(false);
+                let new_feature = Feature::new(feat_name, feat_assignment);
+                result.push(new_feature);
+            } else {
+                let feat_name = feat.get_name();
+                let feat_assignment = None;
+                let new_feature = Feature::new(feat_name, feat_assignment);
+                result.push(new_feature);
+            }
+        }
+
+        if result.len() == 0 {
+            return None
+        } else {
+            return Some(result)
+        }
     }
     
 

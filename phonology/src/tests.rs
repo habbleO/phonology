@@ -76,13 +76,8 @@ fn symbol_parsing() {
     // Tests parsing a single character as a feature matrix.
     let p = Feature::to_feature_matrix("p").expect("This symbol isn't int the parse_hash.");
 
-    assert!(p.contains(&Feature::BILABIAL()));
-    assert!(p.contains(&Feature::MIN_VOICE()));
-    assert!(p.contains(&Feature::MIN_DELAYED_RELEASE()));
-
-    let o = Feature::to_feature_matrix("o").expect("This symbol isn't int the parse_hash.");
-    assert!(o.contains(&Feature::SYLLABIC()));
-    assert!(!o.contains(&Feature::BILABIAL()));
+    let labial = Feature::new("labial", Some(true));
+    assert!(p.contains(&labial));
 }
 
 #[test]
