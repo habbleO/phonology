@@ -1,4 +1,5 @@
 use crate::segment::Segment;
+use crate::feature::Feature;
 use std::vec::Vec;
 
 #[allow(unused)]
@@ -21,5 +22,24 @@ impl Word {
         }
 
         return result;
+    }
+
+    pub fn from_vec(vector: Vec<&str>) -> Result<Self, String> {
+        let mut result: Vec<Segment> = Vec::new();
+
+        for item in vector{
+            match Feature::to_feature_matrix(item) {
+                Some(matrix) => {
+                    let segment = Segment::new(item, matrix);
+                    result.push(segment);
+                },
+                None => {
+                    let err_msg = format!("Could not parse {} as a feature matrix.", item);
+                    return Err(err_msg);
+                }
+            };
+        }
+        let new_word = Word::new(result);
+        return Ok(new_word);
     }
 }

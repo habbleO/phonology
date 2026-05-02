@@ -2,6 +2,7 @@ use crate::feature::Feature;
 use crate::segment::Segment;
 use crate::word::Word;
 
+#[allow(unused)]
 use crate::const_features::*;
 
 fn setup() -> Segment {
@@ -62,7 +63,7 @@ fn get_word_surface_form() {
 }
 
 #[test]
-fn test_symbol_parsing() {
+fn symbol_parsing() {
     let p = Feature::to_feature_matrix("p").expect("This symbol isn't int the parse_hash.");
 
     assert!(p.contains(&Feature::BILABIAL()));
@@ -72,4 +73,12 @@ fn test_symbol_parsing() {
     let o = Feature::to_feature_matrix("o").expect("This symbol isn't int the parse_hash.");
     assert!(o.contains(&Feature::SYLLABIC()));
     assert!(!o.contains(&Feature::BILABIAL()));
+}
+
+#[test]
+fn word_parsing() {
+    let word_vec = vec!["p", "o", "p"];
+    let word_struct = Word::from_vec(word_vec);
+    let word_sr = word_struct.unwrap().get_surface_form();
+    assert_eq!(&word_sr, "pop");
 }
