@@ -158,7 +158,7 @@ fn test_all_symbols_to_features() {
 }
 
 #[test]
-fn test_no_overlap() {
+fn test_no_feature_overlap() {
     let mut feature_matrices: Vec<Vec<Feature>> = Vec::new();
 
     for symbol in IPA_SYMBOLS {
@@ -176,7 +176,7 @@ fn test_no_overlap() {
 }
 
 #[test]
-fn test_failed_overlap() {
+fn test_failed_feature_overlap() {
     let mut feature_matrices: Vec<Vec<Feature>> = Vec::new();
 
     for symbol in IPA_SYMBOLS {
@@ -200,4 +200,49 @@ fn test_failed_overlap() {
     }
 
     assert!(is_overlap == true);
+}
+
+#[test]
+fn test_no_default_feature_overlap() {
+    // Tests that none of the DefaultFeatures in 
+    // Feature::get_default_features() have overlaps in their
+    // definitions. Essentially, that no sound is specified for
+    // both [+X] and [-X]
+
+    let def_features = Feature::get_default_features();
+
+    for feat in def_features {
+        let plus = feat.get_plus();
+        let min = feat.get_minus();
+
+        let overlap: Vec<_> = plus
+            .iter()
+            .filter(|x| min.contains(x))
+            .collect();
+
+        assert!(overlap.len() == 0);
+
+
+    }
+}
+
+#[test]
+fn test_no_default_feature_overlap_failure() {
+    // Tests the failure state of test_no_default_feature_overlap()
+    // Essentially just here to test the logic of the other function
+    // So that if there was overlap, I know that it would be found
+
+    let def_features = Feature::get_default_features();
+
+    for feat in def_features {
+        let plus = feat.get_plus();
+        let plus_2 = feat.get_plus();
+
+        let overlap: Vec<_> = plus
+            .iter()
+            .filter(|x| plus_2.contains(x))
+            .collect();
+
+        assert!(overlap.len() != 0);
+    }
 }
