@@ -1,7 +1,14 @@
 use crate::default_feature::DefaultFeature;
 
 #[allow(unused)]
-#[derive(PartialEq, Clone)]
+pub const IPA_SYMBOLS: [&'static str; 14] = [
+    "p", "b", "t", "d", "k", "g",
+    "m", "n", "ŋ",
+    "a", "e", "i", "o", "u"
+];
+
+#[allow(unused)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct Feature {
     /// A phonological Feature object. It has a name and an assignment, which can be +, -, or 0 / underspecified / undefined.
     /// A [+X] feature is represented by Some(true).
@@ -33,44 +40,68 @@ impl Feature {
         // Features are from Hayes, 2011, Introductory Phonology
         // Currently used symbols and features
         // p, b, t, d, k, g, a, e, i, o, u
+        // m, n, ŋ
         // labial, coronal, dorsal, voice, syllabic,
         // high, low, front, back
+        // consonantal, sonorant, nasal
 
         let labial = DefaultFeature::new(
             "labial", 
-            vec!["p", "b"], 
-            vec!["t", "d", "k", "g", "a", "e", "i", "o", "u"]);
+            vec!["p", "b", "m"], 
+            vec!["t", "d", "k", "g", 
+                 "a", "e", "i", "o", "u", "n", "ŋ"]);
         
         let coronal = DefaultFeature::new(
             "coronal",
-            vec!["t", "d"],
-            vec!["p", "b", "k", "g", "a", "e", "i", "o", "u"]);
+            vec!["t", "d", "n"],
+            vec!["p", "b", "k", "g", 
+                 "a", "e", "i", "o", "u", "m", "ŋ"]);
         
         let dorsal = DefaultFeature::new(
             "dorsal",
-            vec!["k", "g", "a", "e", "i", "o", "u"],
-            vec!["p", "b", "t", "d"]);
+            vec!["k", "g", "a", "e", "i", "o", "u", "ŋ"],
+            vec!["p", "b", "t", "d", "m", "n"]);
 
         let voice = DefaultFeature::new(
             "voice",
-            vec!["b", "d", "g", "a", "e", "i", "o", "u"], 
+            vec!["b", "d", "g", 
+                 "a", "e", "i", "o", "u", "m", "n", "ŋ"], 
             vec!["p", "t", "k"]);
+
+        let consonantal = DefaultFeature::new(
+            "consonantal",
+            vec!["p", "b", "t", "d", "k", "g", "m", "n", "ŋ"],
+            vec!["a", "e", "i", "o", "u"]
+        );
+
+        let sonorant = DefaultFeature::new(
+            "sonorant",
+            vec!["m", "n", "ŋ", "a", "e", "i", "o", "u"],
+            vec!["p", "b", "t", "d", "k", "g"]
+        );
+
+        let nasal = DefaultFeature::new(
+            "nasal",
+            vec!["m", "n", "ŋ"],
+            vec!["p", "b", "t", "d", "k", "g",
+                 "a", "e", "i", "o", "u"]
+        );
 
         let syllabic = DefaultFeature::new(
             "syllabic",
             vec!["a", "e", "i", "o", "u"],
-            vec!["p", "b", "t", "d", "k", "g"]);
+            vec!["p", "b", "t", "d", "k", "g", "m", "n", "ŋ"]);
 
         let high = DefaultFeature::new(
             "high",
-            vec!["i", "u", "k", "g"],
+            vec!["i", "u", "k", "g", "ŋ"],
             vec!["a", "e", "o"]
         );
 
         let low = DefaultFeature::new(
             "low",
             vec!["a"],
-            vec!["i", "e", "u", "o", "k", "g"]
+            vec!["i", "e", "u", "o", "k", "g", "ŋ"]
         );
 
         let front = DefaultFeature::new(
@@ -88,8 +119,10 @@ impl Feature {
         let all_defaults = vec![
             labial, coronal,
             dorsal, voice,
-            syllabic, high,
-            low, front, back
+            consonantal, sonorant,
+            nasal, syllabic, 
+            high, low, 
+            front, back
         ];
 
         return all_defaults;

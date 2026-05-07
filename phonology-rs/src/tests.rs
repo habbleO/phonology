@@ -1,4 +1,4 @@
-use crate::feature::Feature;
+use crate::feature::{Feature, IPA_SYMBOLS};
 use crate::segment::Segment;
 use crate::word::Word;
 
@@ -145,4 +145,59 @@ fn test_word_from_str_fail() {
     // Tests a failure state for Word::from_str().
     let failure = Word::from_str("000");
     assert!(failure.is_err());
+}
+
+#[test]
+fn test_all_symbols_to_features() {
+    // Tests that every symbol in feature::IPA_FEATURES can be
+    // parsed as a feature matrix
+    for symbol in IPA_SYMBOLS {
+        let success = Feature::to_feature_matrix(symbol);
+        assert!(success.is_ok());
+    }
+}
+
+#[test]
+fn test_no_overlap() {
+    let mut feature_matrices: Vec<Vec<Feature>> = Vec::new();
+
+    for symbol in IPA_SYMBOLS {
+        let matrix = Feature::to_feature_matrix(symbol).unwrap();
+        feature_matrices.push(matrix)
+    }
+
+    for i in 0..feature_matrices.len() {
+        for j in 0..feature_matrices.len() {
+            if i != j {
+                assert_ne!(feature_matrices[i], feature_matrices[j])
+            }
+        }
+    }
+}
+
+#[test]
+fn test_failed_overlap() {
+    let mut feature_matrices: Vec<Vec<Feature>> = Vec::new();
+
+    for symbol in IPA_SYMBOLS {
+        let matrix = Feature::to_feature_matrix(symbol).unwrap();
+        feature_matrices.push(matrix)
+    }
+
+    let duplicate = Feature::to_feature_matrix("p").unwrap();
+    feature_matrices.push(duplicate);
+
+    let mut is_overlap = false;
+
+    for i in 0..feature_matrices.len() {
+        for j in 0..feature_matrices.len() {
+            if i != j {
+                if feature_matrices[i] == feature_matrices[j] {
+                    is_overlap = true;
+                }
+            }
+        }
+    }
+
+    assert!(is_overlap == true);
 }
