@@ -53,7 +53,7 @@ fn test_feature_to_feature_matrix_fail() {
 }
 
 #[test]
-fn test_segment_get_name() {]
+fn test_segment_get_name() {
     // Tests Segment::get_name().
     let t = Segment::from_symbol("t").unwrap();
 
@@ -142,7 +142,7 @@ fn test_word_from_str() {
 
 #[test]
 fn test_word_from_str_fail() {
-    Tests a failure state for Word::from_str().
+    // Tests a failure state for Word::from_str().
     let failure = Word::from_str("000");
     assert!(failure.is_err());
 }

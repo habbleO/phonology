@@ -58,7 +58,7 @@ impl Word {
     pub fn from_str(text: &str) -> Result<Self, String> {
         // If possible, converts a &str into a word, where each character is parsed as an IPA character. If this fails, returns Err.
 
-        let ipa_vec = parse_as_vec(text);
+        let ipa_vec = Self::parse_as_vec(text);
 
         let ipa_vec = ipa_vec.iter().map(|x| x.as_str()).collect();
 
