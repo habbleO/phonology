@@ -120,7 +120,7 @@ impl Word {
                             if !self.in_range(current_pos) {
                                 return false;
                             } else {
-                                let seg = self.underlying_form[current_pos as usize].clone();
+                                let seg = self.get_surface_form()[current_pos as usize].clone();
                                 
                                 for feat in matrix {
                                     if seg.is_feature(feat.get_name()) != Some(true) {
@@ -133,7 +133,7 @@ impl Word {
                             if !self.in_range(current_pos) {
                                 return false;
                             } else {
-                                let seg = self.underlying_form[current_pos as usize].clone();
+                                let seg = self.get_surface_form()[current_pos as usize].clone();
                                 
                                 if seg != *x {
                                     return false;
