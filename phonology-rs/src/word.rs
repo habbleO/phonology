@@ -1,34 +1,45 @@
 use crate::segment::Segment;
 use crate::feature::Feature;
-use crate::rule::{Rule, RuleIO, Environment};
+use crate::rule::{Rule, Environment};
 use std::vec::Vec;
+use std::fmt;
 
 #[allow(unused)]
 /// Struct that represents a word, with an underlying form. 
 /// The underlying form is a sequence of segments.
 pub struct Word {
-    underlying_form: Vec<Segment>
+    underlying_form: Vec<Segment>,
+    surface_form: Vec<Segment>
+}
+
+impl fmt::Display for Word {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+
+        let mut to_write = String::new();
+
+        for char in &self.underlying_form {
+            let to_append = char.get_name();
+            to_write.push_str(to_append);
+        }
+
+        write!(f, "{}", &to_write)
+    }
 }
 
 #[allow(unused)]
 impl Word {
     /// Returns a new underlying form given a vector of segments.
     pub fn new(underlying_form: Vec<Segment>) -> Self {
-        return Self{underlying_form};
+        return Self{underlying_form: underlying_form.clone(), 
+                    surface_form: underlying_form.clone()};
     }
 
-    /// Returns the surface form of the word.
-    /// Because phonological rules are currently not implemented, 
-    ///  this is just a sequence of each segment's name.
-    pub fn get_surface_form(&self) -> String {
-        let mut result = String::new();
+    pub fn get_underlying_form(&self) -> &Vec<Segment> {
+        return &self.underlying_form;
+    }
 
-        for char in &self.underlying_form {
-            let to_append = char.get_name();
-            result.push_str(to_append);
-        }
-
-        return result;
+    pub fn get_surface_form(&self) -> &Vec<Segment> {
+        return &self.surface_form;
     }
 
     /// Turns a vector of IPA characters into a word. For this to not error, 
@@ -70,21 +81,73 @@ impl Word {
         return Word::from_vec(ipa_vec);
     }
 
-    /*pub fn left_env_match(&self, pos: i32, rule: &Rule) -> bool {
+    /// Checks if a position
+    fn in_range(&self, pos: i32) -> bool{
+        if pos < 0 {
+            return false;
+        } else if pos > self.underlying_form.len() as i32 - 1 {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /// Given a position in the word, and a Rule object, checks if the
+    /// Rule.left_env matches for the position of the word.
+    ///
+    /// Todo: Needs optimization!
+    /// Todo: make this take an intermediate form, not just 
+    /// the underlying form.
+    pub fn left_env_match(&self, pos: i32, rule: &Rule) -> bool {
         let left_env = rule.get_left_env();
         let mut current_pos = pos - 1;
-        let mut env_pos = 0;
 
         match left_env {
             Some(x) => {
-                for elem in x.reverse() {
-                    match elem {
+                for elem in x.into_iter().rev() {
 
+                    if (current_pos == -1) && (*elem != Environment::Boundary) {
+                        return false;
                     }
+
+                    match elem {
+                        Environment::Boundary => {
+                            if current_pos != -1 {
+                                return false;
+                            }
+                        },
+                        Environment::FeatureMatrix(matrix) => {
+                            if !self.in_range(current_pos) {
+                                return false;
+                            } else {
+                                let seg = self.underlying_form[current_pos as usize].clone();
+                                
+                                for feat in matrix {
+                                    if seg.is_feature(feat.get_name()) != Some(true) {
+                                        return false;
+                                    }
+                                }
+                            }
+                        },
+                        Environment::Segment(x) =>  {
+                            if !self.in_range(current_pos) {
+                                return false;
+                            } else {
+                                let seg = self.underlying_form[current_pos as usize].clone();
+                                
+                                if seg != *x {
+                                    return false;
+                                }
+                            }
+                        }
+                    };
+
+                    current_pos -= 1;
                 }
+                return true;
             },
             None => {return true;}
         };
     }
-    */
+    
 }

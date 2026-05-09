@@ -95,6 +95,16 @@ fn test_failed_feature_overlap() {
 }
 
 #[test]
+fn all_symbols_to_features() {
+    // Tests that every symbol in feature::IPA_FEATURES can be
+    // parsed as a feature matrix
+    for symbol in IPA_SYMBOLS {
+        let success = Feature::to_feature_matrix(symbol);
+        assert!(success.is_ok());
+    }
+}
+
+#[test]
 fn test_no_default_feature_overlap() {
     // Tests that none of the DefaultFeatures in 
     // Feature::get_default_features() have overlaps in their
