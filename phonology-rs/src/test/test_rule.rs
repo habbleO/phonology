@@ -1,9 +1,7 @@
 use crate::feature::Feature;
 use crate::segment::Segment;
+use crate::word::Word;
 use crate::rule::{Rule, RuleIO, Environment};
-
-
-
 
 #[test]
 fn test_rule_creation() {
@@ -27,5 +25,148 @@ fn test_rule_creation() {
     assert!(new_rule.get_output() == &output);
     assert!(new_rule.get_left_env() == &env);
     assert!(new_rule.get_right_env() == &env);
-    
 }
+
+#[test]
+fn left_env_match_boundary() {
+    let potato = Word::from_str("potato").unwrap();
+    let onset_devoicing: Rule;
+
+    let voice = Feature::new("voice", Some(true));
+    let min_voice = Feature::new("voice", Some(false));
+
+    // Onset Devoicing
+    {
+        let input = RuleIO::FeatureMatrix(vec![voice.clone()]);
+        let output = RuleIO::FeatureMatrix(vec![min_voice.clone()]);
+
+        let env = Some(vec![Environment::Boundary]);
+
+        onset_devoicing = Rule::new("Onset Devoicing",
+                                    &input, &output, &env, &None);
+    }
+
+    let fails = potato.left_env_match(1, &onset_devoicing);
+    assert!(fails == false);
+
+    let success = potato.left_env_match(0, &onset_devoicing);
+    assert!(success == true);
+}
+
+#[test]
+fn left_env_match_features() {
+    let potato = Word::from_str("potato").unwrap();
+    let intervocalic_voicing: Rule;
+
+    let voice = Feature::new("voice", Some(true));
+    let min_voice = Feature::new("voice", Some(false));
+    let syllabic = Feature::new("syllabic", Some(true));
+
+    // Intervocalic Voicing
+    {
+        let input = RuleIO::FeatureMatrix(vec![min_voice.clone()]);
+        let output = RuleIO::FeatureMatrix(vec![voice.clone()]);
+
+        let env = Some(vec![
+            Environment::FeatureMatrix(vec![syllabic.clone()])]);
+
+        intervocalic_voicing = Rule::new("Intervocalic Voicing", 
+                                         &input, &output, &env, &env);
+    }
+
+    let fails = potato.left_env_match(0, &intervocalic_voicing);
+    assert!(fails == false);
+
+    let success = potato.left_env_match(2, &intervocalic_voicing);
+    assert!(success == true);
+}
+
+#[test]
+fn left_env_match_segment() {
+    let post_s_raising: Rule;
+    let sell = Word::from_str("set").unwrap();
+
+    {
+        let e = Segment::from_symbol("e").unwrap();
+        let i = Segment::from_symbol("i").unwrap();
+        let s = Segment::from_symbol("s").unwrap();
+
+        let input = RuleIO::Segment(e);
+        let output = RuleIO::Segment(i);
+        let left_env = Some(vec![Environment::Segment(s)]);
+
+        post_s_raising = Rule::new("Post-S Rasing",
+                                   &input, &output, &left_env, &None);
+    }
+
+    let fails = sell.left_env_match(0, &post_s_raising);
+    assert!(fails == false);
+
+    let success = sell.left_env_match(1, &post_s_raising);
+    assert!(success == true);
+}
+
+#[test]
+fn left_env_match_multiple() {
+    let palatalization: Rule;
+    let pis = Word::from_str("pise").unwrap();
+
+    {
+        let p = Segment::from_symbol("p").unwrap();
+        let syllabic = Feature::new("syllabic", Some(true));
+
+        let s = RuleIO::Segment(Segment::from_symbol("s").unwrap());
+        let esh = RuleIO::Segment(Segment::from_symbol("ʃ").unwrap());
+        
+        let env_0 = Environment::Boundary;
+        let env_1 = Environment::Segment(p);
+        let env_2 = Environment::FeatureMatrix(vec![syllabic]);
+
+        let left_env = Some(vec![env_0, env_1, env_2]);
+
+        palatalization = Rule::new("Palatalization",
+                                   &s, &esh, &left_env, &None);
+    }
+
+    let fails = pis.left_env_match(0, &palatalization);
+    assert!(fails == false);
+
+    let fails = pis.left_env_match(1, &palatalization);
+    assert!(fails == false);
+
+    let success = pis.left_env_match(2, &palatalization);
+    assert!(success == true);
+
+    let fails = pis.left_env_match(3, &palatalization);
+    assert!(fails == false);
+}
+
+#[test]
+fn right_env_match_boundary() {
+    let final_devoicing: Rule;
+    let pad = Word::from_str("pad").unwrap();
+
+    {
+        let voice = Feature::new("voice", Some(true));
+        let min_voice = Feature::new("voice", Some(false));
+
+        let input = RuleIO::FeatureMatrix(vec![voice]);
+        let output = RuleIO::FeatureMatrix(vec![min_voice]);
+
+        let env = Some(vec![Environment::Boundary]);
+
+        final_devoicing = Rule::new("Final Devoicing", 
+                                    &input, &output, &None, &env);                               
+    }
+
+    let fails = pad.right_env_match(0, &final_devoicing);
+    assert!(fails == false);
+
+    let fails = pad.right_env_match(1, &final_devoicing);
+    assert!(fails == false);
+
+    let success = pad.right_env_match(2, &final_devoicing);
+    assert!(success == true);
+}
+
+// Todo: Finish testing right_env_match.

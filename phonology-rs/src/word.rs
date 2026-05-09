@@ -149,5 +149,58 @@ impl Word {
             None => {return true;}
         };
     }
+
+    pub fn right_env_match(&self, pos: i32, rule: &Rule) -> bool {
+        let right_env = rule.get_right_env();
+        let mut current_pos = pos + 1;
+
+        match right_env {
+            Some(x) => {
+                for elem in x {
+
+                    if (current_pos == self.get_surface_form().len() as i32) && 
+                       (*elem != Environment::Boundary) {
+                        return false;
+                    }
+
+                    match elem {
+                        Environment::Boundary => {
+                            if current_pos != self.get_surface_form().len() as i32 {
+                                return false;
+                            }
+                        },
+                        Environment::FeatureMatrix(matrix) => {
+                            if !self.in_range(current_pos) {
+                                return false;
+                            } else {
+                                let seg = self.get_surface_form()[current_pos as usize].clone();
+                                
+                                for feat in matrix {
+                                    if seg.is_feature(feat.get_name()) != Some(true) {
+                                        return false;
+                                    }
+                                }
+                            }
+                        },
+                        Environment::Segment(x) =>  {
+                            if !self.in_range(current_pos) {
+                                return false;
+                            } else {
+                                let seg = self.get_surface_form()[current_pos as usize].clone();
+                                
+                                if seg != *x {
+                                    return false;
+                                }
+                            }
+                        }
+                    };
+
+                    current_pos += 1;
+                }
+                return true;
+            },
+            None => {return true;}
+        };
+    }
     
 }
