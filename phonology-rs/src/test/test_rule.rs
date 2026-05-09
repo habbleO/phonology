@@ -1,6 +1,5 @@
-use crate::feature::{Feature, IPA_SYMBOLS};
+use crate::feature::Feature;
 use crate::segment::Segment;
-use crate::word::Word;
 use crate::rule::{Rule, RuleIO, Environment};
 
 

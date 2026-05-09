@@ -1,7 +1,7 @@
 use crate::feature::{Feature, IPA_SYMBOLS};
 use crate::segment::Segment;
 use crate::word::Word;
-use crate::rule::{Rule, RuleIO, Environment};
+//use crate::rule::{Rule, RuleIO, Environment};
 
 #[test]
 fn test_word_get_word_surface_form() {
